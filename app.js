@@ -1,28 +1,19 @@
-/* ===================================================
-   REGISTRO Y RIFA - POLITÉCNICO SUPERIOR
-   =================================================== */
-
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. Validar presencia de credenciales
   if (!window.APP_CONFIG || !window.APP_CONFIG.SUPABASE_URL || !window.APP_CONFIG.SUPABASE_ANON_KEY) {
-    console.error("Error: Archivo config.js no configurado.");
+    console.error("Error: Configuración de Supabase no detectada.");
     return;
   }
 
-  // 2. Inicializar cliente cliente oficial de Supabase JS v2
   const supabase = window.supabase.createClient(
     window.APP_CONFIG.SUPABASE_URL,
     window.APP_CONFIG.SUPABASE_ANON_KEY
   );
 
-  // 3. Captura de elementos de la interfaz
   const form = document.getElementById("registration-form");
   const submitBtn = document.getElementById("submit-btn");
   const noticeBox = document.getElementById("notice");
   const resultCard = document.getElementById("result-card");
   const raffleDisplay = document.getElementById("raffle-number-display");
-
-  if (!form) return;
 
   function showNotice(message, type = "info") {
     if (!noticeBox) return;
@@ -35,7 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (noticeBox) noticeBox.classList.add("hidden");
   }
 
-  // 4. Manejador de envío de formulario
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     hideNotice();
@@ -56,31 +46,28 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Bloquear botón durante el procesamiento
     submitBtn.disabled = true;
     const originalText = submitBtn.textContent;
     submitBtn.textContent = "Verificando registro...";
 
     try {
-      // A. Validar que documento o email no existan previamente para este evento
+      // Validar duplicados por cédula o correo para este evento
       const { data: existing, error: checkError } = await supabase
         .from("attendees")
         .select("id")
         .eq("event_id", window.APP_CONFIG.EVENT_ID)
         .or(`document_id.eq.${documentId},email.eq.${email}`);
 
-      if (checkError) {
-        throw new Error(checkError.message);
-      }
+      if (checkError) throw new Error(checkError.message);
 
       if (existing && existing.length > 0) {
-        showNotice("Este número de documento o correo electrónico ya fue registrado previamente para este evento.", "warning");
+        showNotice("Este número de documento o correo electrónico ya fue registrado en este evento.", "warning");
         return;
       }
 
       submitBtn.textContent = "Guardando...";
 
-      // B. Insertar nuevo registro
+      // Registrar asistente
       const { data: inserted, error: insertError } = await supabase
         .from("attendees")
         .insert([
@@ -94,16 +81,12 @@ document.addEventListener("DOMContentLoaded", () => {
         ])
         .select();
 
-      if (insertError) {
-        throw new Error(insertError.message);
-      }
+      if (insertError) throw new Error(insertError.message);
 
-      // C. Obtener el número de rifa y formatearlo a 3 dígitos (ej: 001, 002)
       const record = inserted && inserted[0];
-      const rawNumber = record?.raffle_number || record?.id || 1;
+      const rawNumber = record?.raffle_number || 1;
       const formattedRaffleNumber = String(rawNumber).padStart(3, "0");
 
-      // D. Mostrar la tarjeta de resultado
       if (raffleDisplay) raffleDisplay.textContent = formattedRaffleNumber;
       if (resultCard) resultCard.classList.remove("hidden");
 
@@ -111,8 +94,8 @@ document.addEventListener("DOMContentLoaded", () => {
       showNotice("¡Registro completado exitosamente!", "success");
 
     } catch (err) {
-      console.error("Error en Supabase:", err);
-      showNotice(`Error al procesar el registro: ${err.message || "Por favor intenta de nuevo."}`, "error");
+      console.error("Error en el registro:", err);
+      showNotice(`Error al procesar el registro: ${err.message || "Intenta nuevamente."}`, "error");
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = originalText;
