@@ -8,7 +8,7 @@
    CONFIGURACIÓN PÚBLICA - POLITÉCNICO SUPERIOR
    =================================================== */
 window.APP_CONFIG = {
-  SUPABASE_URL: "https://TU_PROYECTO.supabase.co",
-  SUPABASE_ANON_KEY: "TU_SUPABASE_ANON_KEY_AQUI",
+  SUPABASE_URL: "https://yrunvqhustuxmjonzzkc.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_JB2cCnyQ_fUeYvgLYKM32g_nP29o6Hz",
   EVENT_ID: "20f01e0b-44e6-4314-8fad-0288773ac84b"
 };
