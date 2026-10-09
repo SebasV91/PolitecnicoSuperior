@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-  // Solo permitir peticiones POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método no permitido' });
   }
@@ -14,11 +13,14 @@ export default async function handler(req, res) {
   const authToken = process.env.TWILIO_AUTH_TOKEN;
   const fromNumber = process.env.TWILIO_PHONE_NUMBER;
 
-  // Formatear el mensaje
+  if (!accountSid || !authToken || !fromNumber) {
+    return res.status(500).json({ error: 'Faltan las variables de entorno de Twilio en Vercel.' });
+  }
+
   const messageBody = `Politécnico Superior: Registro exitoso. Tu número para la rifa es el ${raffleNumber}. ¡Gracias por tu asistencia!`;
+  const formattedPhone = phone.startsWith('+') ? phone : `+57${phone}`;
 
   try {
-    // Petición directa a la API de Twilio
     const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`, {
       method: 'POST',
       headers: {
@@ -26,7 +28,7 @@ export default async function handler(req, res) {
         'Authorization': 'Basic ' + Buffer.from(`${accountSid}:${authToken}`).toString('base64')
       },
       body: new URLSearchParams({
-        To: phone.startsWith('+') ? phone : `+57${phone}`, // Ajusta +57 al código de país
+        To: formattedPhone,
         From: fromNumber,
         Body: messageBody
       })
@@ -35,7 +37,7 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message || 'Error al enviar SMS');
+      throw new Error(data.message || 'Error en la respuesta de Twilio');
     }
 
     return res.status(200).json({ success: true, messageId: data.sid });
