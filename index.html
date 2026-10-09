@@ -8,14 +8,12 @@
 </head>
 <body>
   <div class="container">
-    <!-- Encabezado con Logo Oficial -->
     <header class="header">
       <img src="logo-politecnico.png" alt="Politécnico Superior" class="brand-logo">
       <p class="subtitle">Registro de Asistencia y Sorteo de Rifa</p>
     </header>
 
     <main>
-      <!-- Formulario de Registro -->
       <form id="registration-form" class="card">
         <h2>Formulario de Registro</h2>
 
@@ -47,10 +45,8 @@
         <button type="submit" id="submit-btn" class="btn-primary">Registrar Asistencia</button>
       </form>
 
-      <!-- Caja de Notificaciones / Errores -->
       <div id="notice" class="notice hidden"></div>
 
-      <!-- Tarjeta con el Número de Rifa -->
       <div id="result-card" class="card result-card hidden">
         <h3>¡Registro Exitoso!</h3>
         <p>Tu código único asignado para la rifa es:</p>
@@ -62,7 +58,6 @@
     </main>
   </div>
 
-  <!-- Cliente de Supabase y Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
   <script src="app.js"></script>
