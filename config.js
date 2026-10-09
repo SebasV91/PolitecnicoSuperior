@@ -8,7 +8,7 @@
    CONFIGURACIÓN PÚBLICA - POLITÉCNICO SUPERIOR
    =================================================== */
 window.APP_CONFIG = {
-  SUPABASE_URL: "https://abcdefghijklmnopqrst.supabase.co", // Debe incluir https:// y terminar en .supabase.co
-  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlydW52cWh1c3R1eG1qb256emtjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0OTEzNzUsImV4cCI6MjEwNzA2NzM3NX0.T8J_zg9tXY7GELb0gLxeJbZjVlDWfxbxOBtvt1XZLac", // Todo el texto largo sin saltos de línea
+  SUPABASE_URL: "https://yrunvqhustuxmjonzzkc.supabase.co", // Sin barra '/' al final
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlydW52cWh1c3R1eG1qb256emtjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0OTEzNzUsImV4cCI6MjEwNzA2NzM3NX0.T8J_zg9tXY7GELb0gLxeJbZjVlDWfxbxOBtvt1XZLac",
   EVENT_ID: "20f01e0b-44e6-4314-8fad-0288773ac84b"
 };
