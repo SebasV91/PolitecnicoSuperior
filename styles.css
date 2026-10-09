@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
+
+/* ===================================================
+   VARIABLES INSTITUCIONALES - POLITÉCNICO SUPERIOR
+   =================================================== */
+:root {
+  --primary-color: #ED1C24;        /* Rojo Institucional PS */
+  --primary-hover: #B31218;        /* Rojo Oscuro Hover */
+  --primary-light: #FDE8E9;        /* Rojo Claro para Alertas/Badges */
+  --text-color: #1A1A1A;           /* Texto Principal */
+  --text-muted: #555555;          /* Texto Secundario */
+  --bg-body: #F8F9FA;             /* Fondo de Pantalla */
+  --card-bg: #FFFFFF;             /* Fondo de Tarjetas */
+  --border-color: #E2E8F0;         /* Color de Borde */
+  --shadow: 0 4px 12px rgba(237, 28, 36, 0.08);
+
+  --navy: #1A1A1A;
+  --blue: #ED1C24;
+  --blue-dark: #B31218;
+  --ink: #1A1A1A;
+  --muted: #555555;
+  --line: #E2E8F0;
+  --surface: #FFFFFF;
+  --page: #F8F9FA;
+  --green: #087443;
+  --green-bg: #E9F8F0;
+  --red: #ED1C24;
+  --red-bg: #FDE8E9;
+  --amber: #8A4B08;
+  --amber-bg: #FFF7E8;
+  font-family: "DM Sans", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--text-color); background: var(--bg-body); }
+
+/* Encabezado Institucional */
+.site-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px max(20px, calc((100vw - 940px) / 2));
+  color: #1A1A1A;
+  background: #FFFFFF;
+  border-bottom: 4px solid var(--primary-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.brand-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-mark img {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
+.eyebrow { margin: 0 0 5px; color: var(--primary-color); font-size: .7rem; font-weight: 700; letter-spacing: .15em; }
+.site-header .eyebrow { color: var(--primary-color); }
+h1, h2 { font-family: Manrope, sans-serif; letter-spacing: -.035em; }
+h1 { margin: 0; font-size: 1.25rem; color: var(--text-color); }
+h2 { margin: 0 0 10px; font-size: clamp(1.35rem, 3vw, 1.8rem); color: var(--text-color); }
+
+/* Contenedores y Tarjetas */
+.container { width: min(100% - 30px, 760px); margin: 28px auto 50px; }
+.panel {
+  padding: clamp(20px, 4vw, 32px); margin-bottom: 18px; background: var(--surface);
+  border: 1px solid var(--line); border-top: 4px solid var(--primary-color); border-radius: 16px; box-shadow: var(--shadow);
+}
+
+.intro { color: #FFFFFF; background: linear-gradient(135deg, #1A1A1A 0%, #333333 100%); border: 0; border-top: 4px solid var(--primary-color); }
+.intro .eyebrow { color: #FF6B6B; }
+.intro p { max-width: 590px; line-height: 1.65; color: #E5E7EB; }
+.pill { display: inline-block; padding: 6px 12px; margin-bottom: 13px; border: 1px solid var(--primary-color); background: rgba(237, 28, 36, 0.15); color: #FFFFFF; border-radius: 999px; font-size: .75rem; font-weight: 600; }
+.muted { color: var(--muted); font-size: .9rem; }
+.intro .muted { color: #D1D5DB; }
+
+/* Formularios e Inputs */
+.section-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.step-number { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 13px; background: var(--primary-light); color: var(--primary-color); font-weight: 800; }
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+label { display: flex; flex-direction: column; gap: 8px; font-size: .91rem; font-weight: 600; }
+input:not([type="checkbox"]) {
+  width: 100%; min-width: 0; padding: 13px 14px; color: var(--text-color); background: white;
+  border: 1px solid #CFD6E2; border-radius: 11px; font: inherit; outline: none; transition: border .15s, box-shadow .15s;
+}
+input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(237, 28, 36, 0.15); }
+small { color: var(--muted); font-size: .76rem; font-weight: 400; line-height: 1.4; }
+.consent { display: flex; flex-direction: row; align-items: flex-start; gap: 11px; margin: 24px 0; font-size: .83rem; line-height: 1.55; font-weight: 400; }
+.consent input { margin-top: 4px; accent-color: var(--primary-color); flex: 0 0 auto; width: 17px; height: 17px; }
+
+/* Botones */
+.button { display: inline-flex; justify-content: center; align-items: center; min-height: 48px; padding: 12px 18px; border: 0; border-radius: 12px; font: 700 .95rem "DM Sans", sans-serif; cursor: pointer; transition: transform .15s, background .15s; }
+.button:hover { transform: translateY(-1px); }
+.button:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+.primary { width: 100%; color: white; background: var(--primary-color); }
+.primary:hover { background: var(--primary-hover); box-shadow: 0 4px 12px rgba(237, 28, 36, 0.25); }
+.secondary { color: var(--primary-color); background: var(--primary-light); }
+.secondary:hover { background: #FCD4D6; }
+
+/* Avisos y Resultados */
+.form-footnote { margin: 14px 0 0; color: var(--muted); font-size: .78rem; line-height: 1.5; }
+.notice { padding: 13px 15px; margin: 16px 0; border-radius: 12px; font-size: .9rem; line-height: 1.5; }
+.notice.success { color: var(--green); background: var(--green-bg); }
+.notice.error { color: var(--red); background: var(--red-bg); }
+.notice.warning { color: var(--amber); background: var(--amber-bg); }
+.notice.info { color: #1A1A1A; background: #F0F4F8; }
+.hidden { display: none !important; }
+
+.result-card { margin-top: 24px; padding: 26px 20px; text-align: center; background: #FFF8F8; border: 1px solid #FCD4D6; border-radius: 18px; }
+.success-icon { display: grid; place-items: center; width: 48px; height: 48px; margin: 0 auto 15px; color: white; background: var(--green); border-radius: 50%; font-size: 1.4rem; font-weight: 700; }
+.result-card .eyebrow { color: var(--green); }
+.raffle-number { margin: 12px 0 18px; color: var(--primary-color); font: 800 clamp(3.2rem, 12vw, 5rem) Manrope, sans-serif; letter-spacing: .06em; }
+footer { padding: 8px 10px; color: #778196; text-align: center; font-size: .78rem; line-height: 1.5; border-top: 1px solid #E2E8F0; margin-top: 20px; }
+
+@media (max-width: 580px) {
+  .container { width: min(100% - 20px, 760px); margin-top: 14px; }
+  .site-header { padding: 14px 15px; }
+  .form-grid { grid-template-columns: 1fr; gap: 15px; }
+  .panel { border-radius: 14px; }
+}

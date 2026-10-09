@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14213d">
+  <title>Registro de asistencia y rifa</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="brand-mark">
+    <img src="logo-politecnico.png" alt="Politécnico Superior">
+  </div>
+  <div>
+    <p class="eyebrow">POLITÉCNICO SUPERIOR</p>
+    <h1 id="page-title">Registro de Asistencia y Rifa</h1>
+  </div>
+</header>
+
+  <main class="container">
+    <section class="intro panel">
+      <span class="pill">Registro digital</span>
+      <h2>¡Participa en la rifa!</h2>
+      <p>Completa tus datos para registrar tu asistencia. Si el registro es válido, recibirás tu número de participación en esta pantalla.</p>
+      <p id="event-status" class="muted">Consultando evento...</p>
+    </section>
+
+    <section id="registration-panel" class="panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">FORMULARIO</p>
+          <h2>Datos del participante</h2>
+        </div>
+        <span class="step-number">01</span>
+      </div>
+
+      <div id="setup-warning" class="notice warning hidden">
+        La aplicación aún no está configurada. Completa <code>config.js</code> y ejecuta el archivo SQL de instalación. Consulta el README.
+      </div>
+
+      <form id="registration-form" novalidate>
+        <div class="form-grid">
+          <label>Nombre completo
+            <input name="full_name" autocomplete="name" maxlength="120" required>
+          </label>
+          <label>Carrera o programa
+            <input name="career" maxlength="120" required>
+          </label>
+          <label>Edad
+            <input name="age" type="number" min="1" max="120" inputmode="numeric" required>
+          </label>
+          <label>Correo electrónico
+            <input name="email" type="email" autocomplete="email" maxlength="254" required>
+          </label>
+          <label>Documento de identidad
+            <input name="document_number" inputmode="numeric" autocomplete="off" maxlength="30" required>
+            <small>Ingresa el número sin puntos ni espacios.</small>
+          </label>
+          <label>Celular colombiano
+            <input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="3001234567" maxlength="20" required>
+            <small>Acepta 10 dígitos o el prefijo +57.</small>
+          </label>
+        </div>
+
+        <label class="consent">
+          <input type="checkbox" name="privacy_consent" required>
+          <span>Autorizo el tratamiento de mis datos personales para gestionar mi asistencia y participación en esta rifa. He leído el aviso de privacidad del organizador.</span>
+        </label>
+
+        <button id="submit-button" class="button primary" type="submit">Registrar asistencia</button>
+        <p class="form-footnote">Tus datos no se mostrarán públicamente. No vuelvas a enviar el formulario si ya recibiste tu número.</p>
+      </form>
+
+      <section id="result-panel" class="result-card hidden" aria-live="polite">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <p class="eyebrow">REGISTRO CONFIRMADO</p>
+        <h2>¡Felicidades por asistir!</h2>
+        <p>Tu número para participar en la rifa es:</p>
+        <p id="raffle-number" class="raffle-number">---</p>
+        <button id="copy-number" class="button secondary" type="button">Copiar número</button>
+        <p id="copy-status" class="muted"></p>
+        <p class="form-footnote">Guarda este número. La confirmación se muestra aquí; esta versión no envía SMS.</p>
+      </section>
+
+      <div id="form-message" class="notice hidden" role="status"></div>
+    </section>
+
+    <footer>
+      <p>Aplicación de registro para eventos · Protege tu número de participación.</p>
+    </footer>
+  </main>
+</body>
+</html>

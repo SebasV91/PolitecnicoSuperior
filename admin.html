@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Administración | Asistencia y rifa</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script defer src="admin.js"></script>
+</head>
+<body>
+  <header class="site-header">
+  <div class="brand-mark">
+    <img src="logo-politecnico.png" alt="Politécnico Superior">
+  </div>
+  <div>
+    <p class="eyebrow">POLITÉCNICO SUPERIOR</p>
+    <h1 id="page-title">Registro de Asistencia y Rifa</h1>
+  </div>
+</header>
+  <main class="container">
+    <section class="panel">
+      <h2>Iniciar sesión</h2>
+      <p class="muted">Usa la cuenta administrativa creada en Supabase Authentication. No compartas estas credenciales.</p>
+      <form id="login-form">
+        <label>Correo administrativo<input type="email" id="admin-email" required autocomplete="username"></label>
+        <div style="height:14px"></div>
+        <label>Contraseña<input type="password" id="admin-password" required autocomplete="current-password"></label>
+        <div style="height:18px"></div>
+        <button class="button primary" type="submit">Ingresar</button>
+      </form>
+      <div id="admin-message" class="notice hidden" role="status"></div>
+    </section>
+
+    <section id="dashboard" class="panel hidden">
+      <div class="section-heading">
+        <div><p class="eyebrow">RESUMEN</p><h2 id="admin-event-name">Evento</h2></div>
+        <button id="logout-button" class="button secondary" type="button">Cerrar sesión</button>
+      </div>
+      <p id="admin-stats" class="muted"></p>
+      <div class="form-grid">
+        <label>Buscar participante<input id="search-box" type="search" placeholder="Nombre, documento o número"></label>
+        <label>Evento
+          <select id="event-select" style="padding:13px;border:1px solid #cfd6e2;border-radius:11px;font:inherit;background:white"></select>
+        </label>
+      </div>
+      <div style="height:16px"></div>
+      <button id="refresh-button" class="button secondary" type="button">Actualizar lista</button>
+      <button id="export-button" class="button primary" type="button" style="margin-top:10px">Exportar CSV</button>
+      <div style="overflow-x:auto;margin-top:20px">
+        <table style="width:100%;border-collapse:collapse;font-size:.82rem">
+          <thead><tr>
+            <th style="text-align:left;padding:10px;border-bottom:1px solid #e5e9f1">N.º rifa</th>
+            <th style="text-align:left;padding:10px;border-bottom:1px solid #e5e9f1">Nombre</th>
+            <th style="text-align:left;padding:10px;border-bottom:1px solid #e5e9f1">Documento</th>
+            <th style="text-align:left;padding:10px;border-bottom:1px solid #e5e9f1">Correo</th>
+            <th style="text-align:left;padding:10px;border-bottom:1px solid #e5e9f1">Celular</th>
+            <th style="text-align:left;padding:10px;border-bottom:1px solid #e5e9f1">Fecha</th>
+          </tr></thead>
+          <tbody id="attendee-rows"><tr><td colspan="6" style="padding:12px">Inicia sesión y selecciona un evento.</td></tr></tbody>
+        </table>
+      </div>
+      <p class="form-footnote">Trata la exportación como información confidencial. El archivo CSV contiene datos personales.</p>
+    </section>
+  </main>
+</body>
+</html>
