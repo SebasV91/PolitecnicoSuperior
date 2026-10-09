@@ -3,20 +3,20 @@
    =================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. Validar que la configuración pública esté cargada
+  // 1. Validar configuración
   if (!window.APP_CONFIG || !window.APP_CONFIG.SUPABASE_URL || !window.APP_CONFIG.SUPABASE_ANON_KEY) {
     console.error("Error: La configuración en config.js no está disponible o está incompleta.");
     return;
   }
 
-  // 2. Inicializar el cliente público de Supabase
+  // 2. Inicializar Supabase
   const { createClient } = window.supabase;
   const supabase = createClient(
     window.APP_CONFIG.SUPABASE_URL,
     window.APP_CONFIG.SUPABASE_ANON_KEY
   );
 
-  // 3. Capturar elementos del HTML
+  // 3. Capturar elementos del DOM por ID
   const form = document.getElementById("registration-form");
   const submitBtn = document.getElementById("submit-btn");
   const noticeBox = document.getElementById("notice");
@@ -25,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!form) return;
 
-  // Funciones auxiliares para mostrar mensajes en pantalla
   function showNotice(message, type = "info") {
     if (!noticeBox) return;
     noticeBox.className = `notice ${type}`;
@@ -37,21 +36,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (noticeBox) noticeBox.classList.add("hidden");
   }
 
-  // 4. Manejo del envío del formulario
+  // 4. Manejo del formulario
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     hideNotice();
 
-    // Obtener valores ingresados
+    // Capturar datos de los campos
     const fullName = document.getElementById("fullName")?.value.trim();
     const documentId = document.getElementById("documentId")?.value.trim();
     const email = document.getElementById("email")?.value.trim();
     const phone = document.getElementById("phone")?.value.trim();
     const consent = document.getElementById("consent")?.checked;
 
-    // Validaciones en cliente
     if (!fullName || !documentId || !email || !phone) {
-      showNotice("Por favor completa todos los campos del formulario.", "warning");
+      showNotice("Por favor completa todos los campos obligatorios.", "warning");
       return;
     }
 
@@ -60,13 +58,13 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Bloquear botón durante el procesamiento
+    // Bloquear botón durante la transacción
     submitBtn.disabled = true;
     const originalBtnText = submitBtn.textContent;
     submitBtn.textContent = "Guardando registro...";
 
     try {
-      // PASO A: Insertar los datos en la tabla 'attendees' de Supabase
+      // PASO A: Insertar en Supabase
       const { data, error } = await supabase
         .from("attendees")
         .insert([
@@ -82,21 +80,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (error) throw error;
 
-      // Obtener el registro creado y el número de rifa asignado por la BD
+      // Obtener el número de rifa e imprimirlo a 3 dígitos (ej: 1 -> "001")
       const registeredUser = data && data[0];
       const rawNumber = registeredUser?.raffle_number || registeredUser?.id || 1;
-      
-      // Formatear a 3 dígitos (ejemplo: 1 -> "001", 12 -> "012")
       const raffleNumber = String(rawNumber).padStart(3, "0");
 
-      // PASO B: Actualizar la interfaz de usuario en pantalla
+      // PASO B: Actualizar vista
       if (raffleDisplay) raffleDisplay.textContent = raffleNumber;
       if (resultCard) resultCard.classList.remove("hidden");
       
       form.reset();
-      showNotice("¡Registro exitoso! Tu lugar en la rifa ha sido reservado.", "success");
+      showNotice("¡Registro exitoso! Tu número ha sido asignado.", "success");
 
-      // PASO C: Enviar el SMS mediante la Serverless Function de Vercel
+      // PASO C: Enviar SMS vía API Serverless de Vercel
       try {
         const smsResponse = await fetch("/api/send-sms", {
           method: "POST",
@@ -110,19 +106,18 @@ document.addEventListener("DOMContentLoaded", () => {
         const smsData = await smsResponse.json();
 
         if (!smsResponse.ok) {
-          console.warn("Advertencia SMS:", smsData.error || "No se pudo entregar el mensaje.");
+          console.warn("Advertencia al enviar SMS:", smsData.error || "No se pudo entregar.");
         } else {
-          console.log("SMS enviado con éxito a través de Vercel:", smsData);
+          console.log("SMS enviado con éxito:", smsData);
         }
       } catch (smsErr) {
-        console.error("Error al intentar solicitar el envío del SMS:", smsErr);
+        console.error("Error conectando con la API de SMS:", smsErr);
       }
 
     } catch (err) {
-      console.error("Error en la base de datos:", err);
+      console.error("Error en Supabase:", err);
       showNotice(`No se pudo completar el registro: ${err.message || 'Inténtalo de nuevo.'}`, "error");
     } finally {
-      // Restaurar estado del botón
       submitBtn.disabled = false;
       submitBtn.textContent = originalBtnText;
     }
