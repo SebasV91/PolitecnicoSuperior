@@ -10,5 +10,5 @@
 window.APP_CONFIG = {
   SUPABASE_URL: "https://yrunvqhustuxmjonzzkc.supabase.co", // Sin barra '/' al final
   SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlydW52cWh1c3R1eG1qb256emtjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0OTEzNzUsImV4cCI6MjEwNzA2NzM3NX0.T8J_zg9tXY7GELb0gLxeJbZjVlDWfxbxOBtvt1XZLac",
-  EVENT_ID: "69fca464-4f51-495c-9c62-7982371500be"
+  EVENT_ID: "e8882971-fec5-443a-977d-e36224785650"
 };
