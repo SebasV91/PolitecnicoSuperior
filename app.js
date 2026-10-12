@@ -34,15 +34,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const documentId = document.getElementById("documentId")?.value.trim();
     const email = document.getElementById("email")?.value.trim();
     const phone = document.getElementById("phone")?.value.trim();
+    const gradeLevel = document.getElementById("gradeLevel")?.value;
+    const program = document.getElementById("program")?.value;
     const consent = document.getElementById("consent")?.checked;
 
-    if (!fullName || !documentId || !email || !phone) {
-      showNotice("Por favor completa todos los campos requeridos.", "warning");
+    if (!fullName || !documentId || !email || !phone || !gradeLevel || !program) {
+      showNotice("Por favor completa todos los campos y selecciona las opciones requeridas.", "warning");
       return;
     }
 
     if (!consent) {
-      showNotice("Debes aceptar la autorización de tratamiento de datos.", "warning");
+      showNotice("Debes aceptar el tratamiento de datos según la ley 1581 de 2012.", "warning");
       return;
     }
 
@@ -67,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       submitBtn.textContent = "Guardando...";
 
-      // Registrar asistente
+      // Registrar asistente incluyendo los nuevos campos
       const { data: inserted, error: insertError } = await supabase
         .from("attendees")
         .insert([
@@ -76,7 +78,9 @@ document.addEventListener("DOMContentLoaded", () => {
             full_name: fullName,
             document_id: documentId,
             email: email,
-            phone: phone
+            phone: phone,
+            grade_level: gradeLevel,
+            program: program
           }
         ])
         .select();
