@@ -14,6 +14,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const noticeBox = document.getElementById("notice");
   const resultCard = document.getElementById("result-card");
   const raffleDisplay = document.getElementById("raffle-number-display");
+  const phoneInput = document.getElementById("phone");
+
+  // Opcional: Asegurar que solo escriba números en el teléfono en tiempo real
+  if (phoneInput) {
+    phoneInput.addEventListener("input", (e) => {
+      e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
+    });
+  }
 
   function showNotice(message, type = "info") {
     if (!noticeBox) return;
@@ -33,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const fullName = document.getElementById("fullName")?.value.trim();
     const documentId = document.getElementById("documentId")?.value.trim();
     const email = document.getElementById("email")?.value.trim();
-    const phone = document.getElementById("phone")?.value.trim();
+    const phone = phoneInput?.value.trim();
     const school = document.getElementById("school")?.value.trim();
     const gradeLevel = document.getElementById("gradeLevel")?.value;
     const program = document.getElementById("program")?.value;
@@ -41,6 +49,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!fullName || !documentId || !email || !phone || !school || !gradeLevel || !program) {
       showNotice("Por favor completa todos los campos y selecciona las opciones requeridas.", "warning");
+      return;
+    }
+
+    // Validación estricta de los 10 dígitos del teléfono
+    if (phone.length !== 10 || !/^\d{10}$/.test(phone)) {
+      showNotice("El número de celular debe tener exactamente 10 dígitos numéricos.", "warning");
+      phoneInput.focus();
       return;
     }
 
@@ -70,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       submitBtn.textContent = "Guardando...";
 
-      // Registrar asistente incluyendo el nuevo campo "school"
+      // Registrar asistente
       const { data: inserted, error: insertError } = await supabase
         .from("attendees")
         .insert([
