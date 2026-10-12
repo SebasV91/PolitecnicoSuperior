@@ -86,17 +86,20 @@ body {
 
 .form-group input[type="text"],
 .form-group input[type="email"],
-.form-group input[type="tel"] {
+.form-group input[type="tel"],
+.form-group select {
   width: 100%;
   padding: 12px;
   border: 1px solid var(--border-color);
   border-radius: 6px;
   font-size: 1rem;
   outline: none;
+  background-color: #fff;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(237, 28, 36, 0.15);
 }
