@@ -34,11 +34,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const documentId = document.getElementById("documentId")?.value.trim();
     const email = document.getElementById("email")?.value.trim();
     const phone = document.getElementById("phone")?.value.trim();
+    const school = document.getElementById("school")?.value.trim();
     const gradeLevel = document.getElementById("gradeLevel")?.value;
     const program = document.getElementById("program")?.value;
     const consent = document.getElementById("consent")?.checked;
 
-    if (!fullName || !documentId || !email || !phone || !gradeLevel || !program) {
+    if (!fullName || !documentId || !email || !phone || !school || !gradeLevel || !program) {
       showNotice("Por favor completa todos los campos y selecciona las opciones requeridas.", "warning");
       return;
     }
@@ -69,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       submitBtn.textContent = "Guardando...";
 
-      // Registrar asistente incluyendo los nuevos campos
+      // Registrar asistente incluyendo el nuevo campo "school"
       const { data: inserted, error: insertError } = await supabase
         .from("attendees")
         .insert([
@@ -79,6 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document_id: documentId,
             email: email,
             phone: phone,
+            school: school,
             grade_level: gradeLevel,
             program: program
           }
