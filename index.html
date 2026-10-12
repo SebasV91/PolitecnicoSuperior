@@ -34,7 +34,7 @@
 
         <div class="form-group">
           <label for="phone">Número Celular / WhatsApp *</label>
-          <input type="tel" id="phone" placeholder="¡Escríbelo bien! Es vital (Ej. 3001234567)" required>
+          <input type="tel" id="phone" placeholder="Exactamente 10 dígitos (Ej. 3001234567)" maxlength="10" pattern="[0-9]{10}" title="Debe ingresar exactamente 10 números" required>
         </div>
 
         <div class="form-group">
@@ -86,7 +86,7 @@
         <div class="raffle-badge">
           <span id="raffle-number-display">000</span>
         </div>
-        <p class="info-note">Toma una captura de pantalla de este número para presentar al momento de anunciar al ganador.</p>
+        <p class="info-note">Toma una captura de pantalla de este número para presentar cuando se anuncie al ganador.</p>
       </div>
     </main>
   </div>
