@@ -15,13 +15,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const resultCard = document.getElementById("result-card");
   const raffleDisplay = document.getElementById("raffle-number-display");
   const phoneInput = document.getElementById("phone");
+  const whatsappInput = document.getElementById("whatsapp");
 
-  // Opcional: Asegurar que solo escriba números en el teléfono en tiempo real
-  if (phoneInput) {
-    phoneInput.addEventListener("input", (e) => {
-      e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
-    });
-  }
+  // Restringir a solo números de 10 dígitos en tiempo real
+  [phoneInput, whatsappInput].forEach(input => {
+    if (input) {
+      input.addEventListener("input", (e) => {
+        e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
+      });
+    }
+  });
 
   function showNotice(message, type = "info") {
     if (!noticeBox) return;
@@ -39,23 +42,28 @@ document.addEventListener("DOMContentLoaded", () => {
     hideNotice();
 
     const fullName = document.getElementById("fullName")?.value.trim();
-    const documentId = document.getElementById("documentId")?.value.trim();
-    const email = document.getElementById("email")?.value.trim();
     const phone = phoneInput?.value.trim();
+    const whatsapp = whatsappInput?.value.trim();
     const school = document.getElementById("school")?.value.trim();
     const gradeLevel = document.getElementById("gradeLevel")?.value;
     const program = document.getElementById("program")?.value;
     const consent = document.getElementById("consent")?.checked;
 
-    if (!fullName || !documentId || !email || !phone || !school || !gradeLevel || !program) {
-      showNotice("Por favor completa todos los campos y selecciona las opciones requeridas.", "warning");
+    if (!fullName || !phone || !whatsapp || !school || !gradeLevel || !program) {
+      showNotice("Por favor completa todos los campos requeridos.", "warning");
       return;
     }
 
-    // Validación estricta de los 10 dígitos del teléfono
+    // Validación estricta de 10 dígitos para celular y WhatsApp
     if (phone.length !== 10 || !/^\d{10}$/.test(phone)) {
-      showNotice("El número de celular debe tener exactamente 10 dígitos numéricos.", "warning");
+      showNotice("El número celular debe tener exactamente 10 dígitos.", "warning");
       phoneInput.focus();
+      return;
+    }
+
+    if (whatsapp.length !== 10 || !/^\d{10}$/.test(whatsapp)) {
+      showNotice("El número de WhatsApp debe tener exactamente 10 dígitos.", "warning");
+      whatsappInput.focus();
       return;
     }
 
@@ -69,32 +77,31 @@ document.addEventListener("DOMContentLoaded", () => {
     submitBtn.textContent = "Verificando registro...";
 
     try {
-      // Validar duplicados por cédula o correo para este evento
+      // Validar si el número celular ya fue registrado en este evento
       const { data: existing, error: checkError } = await supabase
         .from("attendees")
         .select("id")
         .eq("event_id", window.APP_CONFIG.EVENT_ID)
-        .or(`document_id.eq.${documentId},email.eq.${email}`);
+        .eq("phone", phone);
 
       if (checkError) throw new Error(checkError.message);
 
       if (existing && existing.length > 0) {
-        showNotice("Este número de documento o correo electrónico ya fue registrado en este evento.", "warning");
+        showNotice("Este número celular ya fue registrado previamente en este evento.", "warning");
         return;
       }
 
       submitBtn.textContent = "Guardando...";
 
-      // Registrar asistente
+      // Registrar asistente con los nuevos campos
       const { data: inserted, error: insertError } = await supabase
         .from("attendees")
         .insert([
           {
             event_id: window.APP_CONFIG.EVENT_ID,
             full_name: fullName,
-            document_id: documentId,
-            email: email,
             phone: phone,
+            whatsapp: whatsapp,
             school: school,
             grade_level: gradeLevel,
             program: program
