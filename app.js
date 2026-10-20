@@ -46,10 +46,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const whatsapp = whatsappInput?.value.trim();
     const school = document.getElementById("school")?.value.trim();
     const gradeLevel = document.getElementById("gradeLevel")?.value;
-    const program = document.getElementById("program")?.value;
     const consent = document.getElementById("consent")?.checked;
 
-    if (!fullName || !phone || !whatsapp || !school || !gradeLevel || !program) {
+    if (!fullName || !phone || !whatsapp || !school || !gradeLevel) {
       showNotice("Por favor completa todos los campos requeridos.", "warning");
       return;
     }
@@ -77,23 +76,23 @@ document.addEventListener("DOMContentLoaded", () => {
     submitBtn.textContent = "Verificando registro...";
 
     try {
-      // Validar si el número celular ya fue registrado en este evento
+      // Validar si el número celular O el número de WhatsApp ya fueron registrados
       const { data: existing, error: checkError } = await supabase
         .from("attendees")
-        .select("id")
+        .select("phone, whatsapp")
         .eq("event_id", window.APP_CONFIG.EVENT_ID)
-        .eq("phone", phone);
+        .or(`phone.eq.${phone},whatsapp.eq.${whatsapp},phone.eq.${whatsapp},whatsapp.eq.${phone}`);
 
       if (checkError) throw new Error(checkError.message);
 
       if (existing && existing.length > 0) {
-        showNotice("Este número celular ya fue registrado previamente en este evento.", "warning");
+        showNotice("Este número de celular o de WhatsApp ya fue registrado previamente en este evento.", "warning");
         return;
       }
 
       submitBtn.textContent = "Guardando...";
 
-      // Registrar asistente con los nuevos campos
+      // Registrar asistente
       const { data: inserted, error: insertError } = await supabase
         .from("attendees")
         .insert([
@@ -103,8 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
             phone: phone,
             whatsapp: whatsapp,
             school: school,
-            grade_level: gradeLevel,
-            program: program
+            grade_level: gradeLevel
           }
         ])
         .select();
