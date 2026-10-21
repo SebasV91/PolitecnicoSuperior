@@ -26,14 +26,33 @@
       flex-wrap: wrap;
       gap: 15px;
     }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
     .counter-badge {
       background-color: #ED1C24;
       color: white;
-      padding: 12px 24px;
+      padding: 12px 20px;
       border-radius: 10px;
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       font-weight: bold;
       text-align: center;
+    }
+    .btn-export {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .btn-export:hover {
+      background-color: #218838;
     }
     .table-card {
       background: white;
@@ -78,8 +97,11 @@
         <img src="logo-politecnico.png" alt="Politécnico Superior" style="max-height: 50px;">
         <h2 style="margin-top: 8px; color: #333;">Monitoreo de Asistentes en Vivo 🔴</h2>
       </div>
-      <div class="counter-badge">
-        Total Registrados: <span id="total-count">0</span>
+      <div class="header-actions">
+        <div class="counter-badge">
+          Total: <span id="total-count">0</span>
+        </div>
+        <button id="export-btn" class="btn-export">📥 Descargar Excel</button>
       </div>
     </div>
 
@@ -121,6 +143,8 @@
 
       const tbody = document.getElementById("attendees-list");
       const totalCount = document.getElementById("total-count");
+      const exportBtn = document.getElementById("export-btn");
+      let currentData = [];
 
       async function fetchAttendees() {
         const { data, error } = await supabase
@@ -134,14 +158,15 @@
           return;
         }
 
-        totalCount.textContent = data.length;
+        currentData = data || [];
+        totalCount.textContent = currentData.length;
 
-        if (data.length === 0) {
+        if (currentData.length === 0) {
           tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px;">Aún no hay asistentes registrados.</td></tr>';
           return;
         }
 
-        tbody.innerHTML = data.map(item => {
+        tbody.innerHTML = currentData.map(item => {
           const date = new Date(item.created_at);
           const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
           const raffleFormatted = String(item.raffle_number || 0).padStart(3, "0");
@@ -160,10 +185,38 @@
         }).join("");
       }
 
+      // Función para exportar los datos a CSV compatible con Excel
+      exportBtn.addEventListener("click", () => {
+        if (!currentData || currentData.length === 0) {
+          alert("No hay datos para exportar.");
+          return;
+        }
+
+        const headers = ["Numero Rifa", "Nombre Completo", "Celular", "WhatsApp", "Colegio", "Grado", "Fecha y Hora"];
+        const rows = currentData.map(item => [
+          `"${String(item.raffle_number || 0).padStart(3, '0')}"`,
+          `"${item.full_name.replace(/"/g, '""')}"`,
+          `"${item.phone}"`,
+          `"${item.whatsapp}"`,
+          `"${item.school.replace(/"/g, '""')}"`,
+          `"${item.grade_level}"`,
+          `"${new Date(item.created_at).toLocaleString()}"`
+        ]);
+
+        const csvContent = "\uFEFF" + [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `Asistentes_Politecnico_${new Date().toISOString().slice(0,10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
       // Carga inicial
       await fetchAttendees();
 
-      // Suscripción a cambios en tiempo real mediante Supabase Realtime
+      // Suscripción a cambios en tiempo real
       supabase
         .channel('public:attendees')
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'attendees' }, () => {
